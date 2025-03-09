@@ -1,0 +1,301 @@
+Appium is open source mobile automation tool for testing native apps (Android/IOS) and mobile browser
+Appium internally uses webdriver json wire(which selenium does) to test the app, so it is just like selenium for mobile
+
+Features:
+1. Cross platform test supporting tool
+2. Native(If app is created only for andriod or ios seperately), Hybrid(Mobile plus web platform)
+3. Supports web driver API-Selenium Family
+
+Supported Platform:
+IOS
+Android
+Firefox/OS
+
+4. You can write your code on java, python, js, ruby, C#
+
+APPIUM ARCHITECTURE:
+- Appium Client Code => Json => Appium Server 
+								-> UIAutomator2 (Android guys has provided us this testing framework to test there API's/APPs)
+									=> Android
+								-> XCUITest (IOS guys has provided us this testing framework to test there API's/APPs)
+									=> IOS 
+- Need editor to write code and jars for framwork
+
+> Download JAVA
+	> Set home path in envoirnment variable
+		C:\Program Files\Java\jdk-17
+> Download Android Studio and find out android sdk path
+	> ANDROID_HOME
+		> C:\Users\Saif\AppData\Local\Android\Sdk
+		> Open Android Studio need to create a dummy project
+			> After that click on tools in above options
+				> SDK Manager
+					> SDK Tools
+						> Uncheck Hide Obsolete Packages
+							> Check Android SDK Tools (obssolete)
+								> Click ok
+								> Set Path
+									> C:\Users\Saif\AppData\Local\Android\Sdk\tools\bin
+									> C:\Users\Saif\AppData\Local\Android\Sdk\tools
+									> C:\Users\Saif\AppData\Local\Android\Sdk\platform-tools  [not necessary]
+> Download Node
+	> Set NODE_HOME
+		> C:\Program Files\nodejs
+		> C:\Program Files\nodejs\node_modules\npm\bin
+	> Difference b/w node and npm
+		> Node is software
+		> In Node  we have command line installer called npm. Using npm we can download any node module like appium, angular js, 
+		protractor (just like selenium)
+
+> Open android studio
+	> tools
+		> device manager
+			> Add virtual mobile device
+> Open command line	
+	> npm install -g appium  [install appium server]
+	> appium enter
+> Download Eclipse
+	> Maven project is an standardize way in all java projects
+		> It provides a command line to run case
+		> There are many benifits of it
+		> Just b/c appium serve is built on node js so all node pkgs are hosted on npm website
+		> Similaryly we are usin appium java. Java related pkgs are hosted on maven repository
+> Open maven repository
+		> Search appium
+			> java-client will be there 
+> Open eclipse
+	> Create a maven project
+		> with archetype-quickstart
+			> Group Id is pkg name
+			> Artifact Id is project name
+> pom.xml is heart of project
+> Open pom.xml then locate dependencies tag remove the previous junit dependency and put the maven project dependency
+> Similary search testng dependency on maven 
+> JavaClient for Appium Java
+> Selenium support maven
+> Add TestNG dependency below maven dependency
+> In maven project if under project build automatically is checked then it will download the jars automatically but if not then
+right click on project > maven > update project. it will download all jars
+> Install TestNG plugin from help > eclipse marketplace
+> Any version of testng 6 it support java 8
+
+> UIAutomator2:
+	1. UI testing framework introduced by google to facilitate automtion on a andriod device or emulator
+	2. Appium leverages this UiAutomator  with its own wrapper and came up with UiAutomator2 driver to automate andriod apps.
+
+> List all appium drivers:
+		open cmd run - appium driver list
+					 - appium driver install driverName
+
+==>
+Write first andriod automation case:
+	> Start appium server
+	> Create a  java class
+		> Create Android Driver like that:
+				> AndroidDriver driver = new AndroidDriver(new URI("http://127.0.0.1:4723").toURL(), options);
+					> It receives 2 arguments:
+						> Appium Server
+						> capabilities
+		> Need UiAutomator obj
+				> UiAutomator2Options options = new UiAutomator2Options();
+					> set device name
+						> Created in android studio
+						> options.setDeviceName("saifEmulator"); //emulator
+					> set app
+						> options.setApp("C://Users//Saif//eclipse-workspace//Appium//src//main//java//resources//ApiDemos-debug.apk");
+					> Create pkg and paste app you will test
+
+> Locators:
+	> xpath, id, accessibilityid, classname, andriodUIAutmator
+> Appium Inspector:
+	> Tool to get property of every item in android app
+	> download appium inspector 
+
+> //		driver.findElement(By)
+	> This is a generic by it doesn't include accessibilityid and andriodUIAutmator
+	> Foe this we need to use 
+> Implicit Wait:
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+> Appium Inspector:
+	> app				
+	> deviceName		saifEmulator
+	> platformName		android
+	> automationName	UIAutomator2
+	
+
+> Appium Github Gesture
+
+driver.executeScript("mobile: longClickGesture",
+				ImmutableMap.of("elementId", ((RemoteWebElement)ele).getId()));
+		> RemoteWebElement need to cast the element with this it doesn't know either it is web element or mobile element
+			
+> It will rotate the screen 			
+DeviceRotation landscape = new DeviceRotation(0, 0, 90);
+		driver.rotate(landscape);
+
+> It will copy paste the text in text field
+		driver.setClipboardText("Saif Wifi");
+		driver.findElement(By.id("android:id/edit")).sendKeys(driver.getClipboardText());
+
+Press key:
+		driver.pressKey(new KeyEvent(AndroidKey.BACK));
+
+
+> App Pkg and App activity
+	> App Pkg is the app
+	> In the app there are many activity to perform each activity is an app activity
+	> Open the 	Android emulator and navigate to required screen
+	
+	How to get app activity:
+	open cmd type : 
+		adb devices
+		C:\Users\Saif>adb devices
+		List of devices attached
+		emulator-5554   device
+		
+		it will you the current device
+		adb shell dumpsys window | find "mCurrentFocus"
+	
+	C:\Users\Saif>adb shell dumpsys window | find "mCurrentFocus"
+  mCurrentFocus=Window{718cc39 u0 io.appium.android.apis/io.appium.android.apis.preference.PreferenceDependencies}
+  
+		By doing this when we run the test it will directly open this page(activity)
+  		Activity act = new Activity("io.appium.android.apis", "io.appium.android.apis.preference.PreferenceDependencies");
+
+		((JavascriptExecutor) driver).executeScript("mobile: startActivity",
+		ImmutableMap.of("intent", "appPackage/appActivity"));
+		
+		
+		
+1. Fill the form details and verify Toast error messages displayed appropriately for wrong inputs.
+2. Shop the items in the app by scrolling to specific Product and add to cart.
+3. Validate if the items selected in the page 2 are matching with items displayed in check out page.
+4. Validate the total amount displayed in the checkout page matches with sum of product amounts selected for shipping
+5. Validate mobile gestures working for links (long press) and navigate to WebView
+6. Verify if user can do operations on Web view and can navigate back to Native app if needed.
+
+How to intall app in already running emulator's virtual device:
+C:\Users\Saif\AppData\Local\Android\Sdk\platform-tools>adb install C:\Users\Saif\Downloads\General-Store.apk 
+
+Hides keyboard if opended:
+		driver.hideKeyboard();
+
+		//Toast Message: Popup/Msg that appears on screen and disappears.
+
+> How to get the attribute value of any element
+driver.findElement(By.xpath("(//android.widget.Toast)[1]")).getAttribute("name")
+
+> Selenium Wait library:
+	> Add dependency selenium support
+	
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+		#explicit wait
+		wait.until(ExpectedConditions.attributeContains(cart, "text", "Cart"));
+													>(element, attribute, value)
+
+It any action lead you to a web from your app then the app is hybrid other it will be called as native app 
+We need to switch the context of driver.
+
+Set<String> contexts= driver.getContextHandles(); //Gets all contexts
+		for(String contextName : contexts) {
+			System.out.println(contextName);
+		}		
+		 driver.context("WEBVIEW_com.androidsample.generalstore");
+		 
+		 //
+		  driver.context("WEBVIEW_com.androidsample.generalstore");
+		driver.findElement(By.name("q")).sendKeys("Rahul Shetty Academy");
+		driver.findElement(By.name("q")).sendKeys(Keys.ENTER);
+		driver.pressKey(new KeyEvent(AndroidKey.BACK));
+		 driver.context("NATIVE_APP");
+		
+		We need to have chrome driver also so access google chrome
+		download chrome driver and set this in baseTest
+		options.setChromedriverExecutable("D:\\Automation\\Appium\\selenium.webdriver.chromedriver.124.0.6367.7800.nupkg");
+
+		 
+Mobile browser test runs on selenium. 
+
+
+IMPORTANCE OF FRAMEWORK:
+
+In POM for android @AndroidFindBy
+
+AppiumDriver is the parent driver to both androiddriver and iosdriver
+
+
+BeforeClass (Startting Appium, Invoking App) >> @Test, @Test(Java Class) >> AfterClass(Stoping Server)
+100 Tests
+ TESTNG xml [To all test cases as a suit]
+ Convert the project to testng by right click on project and click on TestNG>>Convert to TestNG
+ 
+ @dataProvider expects two dimensional array to return
+ 
+ To use a data file [json] we have to do some work 
+ Download dependency from maven:
+ common.io	[json to string] [parse json file to json string]
+ jackson data bind [mapper read json string to hashmap] [convert json string to hashmap]
+ hashmap -> testcase (TestNG data provider)
+ 
+  
+Extent Reports
+	> Maven dependencies of extent report
+ 
+ >>>Phase 1
+		> Extent Reports
+			>  Understand Basic Configuration of Extent Reports with Standalone Test
+ >>>Phase 2
+		> Generate Report
+			> Extent Report + testNGListeners
+			
+alwaysRun=true
+
+This method will always run if  we are running any group
+
+To execute case through maven command line we have add some things in pom.xml under dependencies
+
+	<profiles>
+		<profile>
+			<id>Regression</id>
+			<build>
+				<pluginManagement>
+					search testng xml maven
+					search for using suite xml file 
+					copy every thing and past here
+				
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
+
+
+Download maven in system
+	set maven home in envoirnment variable
+		C:\Program Files\Maven\apache-maven-3.9.9\bin
+	open cmd run : mvn -v
+	now open project in cmd
+		cd C:\Users\Saif\eclipse-workspace\AppiumFrameworkDesign
+		now run :
+		mvn test -PidName
+		like this : mvn test -PRegression
+		Pass Parameter: mvn test -PRegression -DipAddress=127.0.0.1
+		
+		
+		bs://e78cbc8ac8a1d3c07eddd7bed34d80ae02036b1f
+		
+> Download browserstack in eclipse from market place
+> create account and upload app in web
+> Right click on project and in browser stack click "Integrate with App Automate SDK"
+	> Enter username and pwd 
+	> Click integrate
+> A yml file will be created in your app
+	> Inside it:
+		> user name & pwd already filled
+		> Add app in it 
+		> Also there are multiple device on which  it will run you can get the device from browserstack
+		> Also we can do paralel run 
+			> parallelPerPlatform : you can pass number here how many case should run in one device parallel
+			> Pass Parameter To Run Locally when it is changed to browserstack: mvn test -PRegression -DipAddress=127.0.0.1 BROWSERSTACK_AUTOMATION = false
+
+> 		

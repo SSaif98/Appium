@@ -1,0 +1,29 @@
+Framework Design:
+
+syedsaifali.utils						[Common Utils]
+	>AndroidActions					[Platform Specification]
+	
+		> FormPage					[Page Object]
+			-AndroidTest			[Test]
+				-AndroidBaseTest	[Test Configuration]
+				
+		> CheckoutPage				[Page Object]
+			-AndroidTest			[Test]
+				-AndroidBaseTest 	[Test Configuration]
+				
+		> ProductCatalogPage		[Page Object]
+			-AndroidTest			[Test]
+				-AndroidBaseTest	[Test Configuration]
+				
+	> IOSActions				[Platform Specification]
+	
+		> HomePage				[Page Object]
+			-IOSTest			[Test]
+				-IOSBaseTest	[Test Configuration]
+				
+		> AlertsViews			[Page Object]
+			-IOSTest			[Test]
+				-IOSBaseTest	[Test Configuration]
+				
+				
+	
